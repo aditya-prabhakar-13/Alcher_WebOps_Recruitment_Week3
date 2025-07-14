@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ user.username }}'s Profile</title>
+  <link rel="stylesheet" href="{% static 'movies/styles.css' %}" />
+</head>
+<body>
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <header>
+    <div class="logo">plex</div>
+    <nav>
+      <a href="{% url 'index' %}" class="sign-in">Home</a>
+      <a href="{% url 'logout' %}" class="sign-in">Logout</a>
+    </nav>
+  </header>
+  <main class="section">
+    <h2>{{ user.username }}'s Liked Movies</h2>
+    <div class="scroll-container">
+      {% for movie in liked_movies %}
+        <div class="card" style="background-image: url('{{ movie.poster }}');">
+          <div class="overlay">{{ movie.title }}</div>
+          <span>{{ movie.like_count }} Likes</span>
+          <div class="cast-list">
+            {% for actor in movie.casts.all %}
+              <div class="cast-member">
+                <img src="{{ actor.photo }}" alt="{{ actor.name }}">
+                <p>{{ actor.name }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% empty %}
+        <p>You haven't liked any movies yet.</p>
+      {% endfor %}
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
